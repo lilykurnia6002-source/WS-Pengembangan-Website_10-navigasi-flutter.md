@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'project_detail_page.dart';
-import 'edit_profile_page.dart';
+import 'package:go_router/go_router.dart';
 
+import '../app/app_routes.dart';
 import '../data/dummy_data.dart';
 import '../models/models.dart';
 
@@ -16,26 +16,21 @@ class _ProfilePageState extends State<ProfilePage> {
   Profile _profile = defaultProfile;
 
   void _openProjectDetail(Project project) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ProjectDetailPage(project: project),
-      ),
-    );
+    context.push(AppRoutes.projectDetail(project.id)); // ID di path
   }
 
   Future<void> _openEditProfile() async {
-    // await = tunggu sampai halaman Edit ditutup
-    final result = await Navigator.push<Profile>(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EditProfilePage(profile: _profile),
-      ),
+    // push<Profile>: hasil sudah bertipe Profile?, tidak perlu `is!`
+    final result = await context.push<Profile>(
+      AppRoutes.editProfile,
+      extra: _profile, // objek dikirim lewat extra
     );
-
-    // Dua pengaman: widget masih aktif? ada hasil (tidak dibatalkan)?
     if (!mounted || result == null) return;
     setState(() => _profile = result);
+  }
+
+  void _logout() {
+    context.go(AppRoutes.splash); // stack dibersihkan, tanpa RemoveUntil
   }
 
   @override
@@ -48,6 +43,11 @@ class _ProfilePageState extends State<ProfilePage> {
             icon: const Icon(Icons.edit),
             tooltip: 'Edit profil',
             onPressed: _openEditProfile,
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Keluar',
+            onPressed: _logout,
           ),
         ],
       ),

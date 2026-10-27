@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'pages/profile_page.dart';
+import 'app/app_router.dart';
 
 void main() => runApp(const MyApp());
 
@@ -9,11 +9,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Kartu Profil Digital',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(colorSchemeSeed: Colors.indigo, useMaterial3: true),
-      home: const ProfilePage(),
+      routerConfig: appRouter,
     );
   }
 }
